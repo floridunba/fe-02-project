@@ -1,0 +1,28 @@
+.wrapper { background: var(--sand); min-height: 100vh; }
+.header { padding: 20px 20px 14px; background: var(--cream); border-bottom: 1px solid var(--sand2); }
+.title { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--soil); margin-bottom: 2px; }
+.sub { font-size: 11px; color: var(--muted); font-weight: 300; }
+
+.tabBar { display: flex; border-bottom: 1px solid var(--sand2); background: var(--cream); }
+.tab { flex: 1; text-align: center; padding: 11px; font-size: 12px; cursor: pointer; color: var(--muted); border: none; border-bottom: 2px solid transparent; margin-bottom: -1px; font-weight: 400; background: transparent; transition: all .15s; font-family: 'DM Sans', sans-serif; }
+.tab.active { color: var(--soil); border-bottom-color: var(--accent); font-weight: 500; }
+
+.body { padding: 16px 20px; background: var(--sand); }
+.card { background: var(--cream); border: 1px solid var(--tag); border-radius: 14px; padding: 14px; margin-bottom: 12px; cursor: pointer; transition: transform .15s, box-shadow .15s; }
+.card:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(0,0,0,.08); }
+.cardTop { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 12px; }
+.cardImg { width: 56px; height: 56px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
+.cardMeta { flex: 1; }
+.cardName { font-size: 13px; font-weight: 500; margin-bottom: 2px; }
+.cardDates { font-size: 11px; color: var(--muted); margin-bottom: 5px; }
+.divider { height: 1px; background: var(--sand2); margin-bottom: 10px; }
+.cardFooter { display: flex; justify-content: space-between; align-items: center; }
+.cardTotal { font-size: 13px; font-weight: 500; color: var(--accent); }
+.cardGuests { font-size: 11px; color: var(--muted); }
+.cardAction { font-size: 11px; color: var(--soil); cursor: pointer; font-weight: 500; }
+
+.empty { text-align: center; padding: 48px 20px; }
+.emptyIcon { font-size: 40px; margin-bottom: 12px; }
+.emptyText { font-size: 14px; color: var(--muted); margin-bottom: 16px; }
+.btnSm { padding: 10px 22px; background: var(--soil); color: var(--cream); border: none; border-radius: 20px; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500; cursor: pointer; }
+.btnSm:hover { background: var(--forest2); }

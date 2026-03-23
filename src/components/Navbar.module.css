@@ -1,0 +1,8 @@
+.navbar { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; background: var(--cream); border-bottom: 1px solid var(--sand2); }
+.logo { font-family: 'DM Serif Display', serif; font-size: 16px; color: var(--soil); letter-spacing: .3px; text-decoration: none; }
+.logo span { color: var(--accent); }
+.links { display: flex; gap: 16px; align-items: center; }
+.link { font-size: 12px; color: var(--muted); font-weight: 400; text-decoration: none; transition: color .15s; }
+.link:hover { color: var(--soil); }
+.btn { font-size: 12px; padding: 6px 14px; background: var(--soil); color: var(--cream); border-radius: 20px; font-weight: 500; text-decoration: none; transition: background .15s; }
+.btn:hover { background: var(--forest2); }

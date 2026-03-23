@@ -1,0 +1,43 @@
+.wrapper { background: var(--cream); min-height: 100vh; }
+.authWrap { padding: 36px 28px; background: var(--cream); max-width: 480px; margin: 0 auto; }
+.logo { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--soil); margin-bottom: 6px; text-align: center; }
+.logo span { color: var(--accent); }
+.sub { font-size: 12px; color: var(--muted); text-align: center; margin-bottom: 28px; font-weight: 300; }
+
+.authTabs { display: flex; margin-bottom: 24px; border-bottom: 1px solid var(--sand2); }
+.authTab {
+  flex: 1; padding: 10px; text-align: center; font-size: 13px; cursor: pointer;
+  color: var(--muted); border: none; border-bottom: 2px solid transparent;
+  margin-bottom: -1px; background: transparent; transition: all .15s;
+  font-weight: 400; font-family: 'DM Sans', sans-serif;
+}
+.authTab.active { color: var(--soil); border-bottom-color: var(--accent); font-weight: 500; }
+
+.formGroup { margin-bottom: 14px; }
+.label {
+  font-size: 11px; color: var(--muted); margin-bottom: 5px; display: block;
+  font-weight: 500; letter-spacing: .5px; text-transform: uppercase;
+}
+.input {
+  width: 100%; padding: 11px 14px; border: 1px solid var(--tag);
+  border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 13px;
+  background: var(--sand); color: var(--text); outline: none; transition: border-color .15s;
+}
+.input:focus { border-color: var(--bark); }
+.input::placeholder { color: var(--stone); font-weight: 300; }
+
+.btnPrimary {
+  width: 100%; padding: 13px; background: var(--soil); color: var(--cream);
+  border: none; border-radius: 12px; font-family: 'DM Sans', sans-serif;
+  font-size: 13px; font-weight: 500; cursor: pointer; margin-top: 6px; transition: background .15s;
+}
+.btnPrimary:hover { background: var(--forest2); }
+.divider { text-align: center; font-size: 11px; color: var(--stone); margin: 16px 0; }
+.btnOutline {
+  width: 100%; padding: 11px; background: var(--cream); color: var(--soil);
+  border: 1px solid var(--tag); border-radius: 12px; font-family: 'DM Sans', sans-serif;
+  font-size: 13px; cursor: pointer; transition: background .15s;
+}
+.btnOutline:hover { background: var(--sand2); }
+.footer { text-align: center; font-size: 11px; color: var(--muted); margin-top: 18px; }
+.footer span { color: var(--accent); cursor: pointer; }

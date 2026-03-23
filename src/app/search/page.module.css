@@ -1,0 +1,30 @@
+.wrapper { background: var(--sand); min-height: 100vh; }
+
+.searchHeader { background: var(--cream); padding: 16px 20px; border-bottom: 1px solid var(--sand2); position: sticky; top: 0; z-index: 2; }
+.searchBar { display: flex; align-items: center; background: var(--sand); border: 1px solid var(--tag); border-radius: 12px; padding: 0 14px; gap: 8px; margin-bottom: 12px; }
+.searchIcon { font-size: 14px; color: var(--stone); }
+.searchBar input { flex: 1; border: none; background: transparent; padding: 11px 0; font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--text); outline: none; }
+.searchBar input::placeholder { color: var(--stone); font-weight: 300; }
+
+.filterRow { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px; }
+.filterPill { white-space: nowrap; padding: 5px 12px; border-radius: 20px; font-size: 11px; border: 1px solid var(--tag); background: var(--cream); color: var(--muted); cursor: pointer; font-weight: 400; transition: all .15s; font-family: 'DM Sans', sans-serif; }
+.filterPill.on { background: var(--soil); color: var(--cream); border-color: var(--soil); }
+.filterPill:hover:not(.on) { border-color: var(--bark); color: var(--soil); }
+
+.sortRow { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background: var(--sand); border-bottom: 1px solid var(--sand2); }
+.sortLabel { font-size: 11px; color: var(--muted); }
+.sortSel { font-size: 11px; color: var(--soil); border: none; background: transparent; font-family: 'DM Sans', sans-serif; cursor: pointer; font-weight: 500; outline: none; }
+
+.results { padding: 14px 20px; background: var(--sand); }
+.resultCard { display: flex; gap: 12px; background: var(--cream); border-radius: 14px; border: 1px solid var(--tag); margin-bottom: 12px; padding: 14px; cursor: pointer; text-decoration: none; color: inherit; transition: transform .15s, box-shadow .15s; }
+.resultCard:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(0,0,0,.08); }
+.resultImg { width: 70px; height: 70px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 28px; flex-shrink: 0; }
+.resultInfo { flex: 1; }
+.resultName { font-size: 13px; font-weight: 500; margin-bottom: 2px; }
+.resultLoc { font-size: 11px; color: var(--muted); margin-bottom: 6px; }
+.resultRow { display: flex; justify-content: space-between; }
+.resultPrice { font-size: 13px; font-weight: 500; color: var(--accent); }
+.resultPrice span { font-size: 10px; font-weight: 300; color: var(--muted); }
+.resultAvail { font-size: 10px; color: var(--forest); font-weight: 500; }
+.tags { display: flex; gap: 5px; margin-top: 5px; flex-wrap: wrap; }
+.tag { font-size: 10px; padding: 2px 8px; background: var(--sand2); color: var(--soil); border-radius: 10px; font-weight: 400; }

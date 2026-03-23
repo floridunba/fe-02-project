@@ -1,0 +1,16 @@
+.card { display: block; background: var(--cream); border-radius: 14px; overflow: hidden; border: 1px solid var(--tag); margin-bottom: 14px; text-decoration: none; color: inherit; transition: transform .15s, box-shadow .15s; }
+.card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,.1); }
+.img { height: 130px; display: flex; align-items: center; justify-content: center; position: relative; }
+.emoji { font-size: 36px; position: relative; z-index: 1; }
+.overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,.3), transparent); }
+.badge { position: absolute; top: 10px; right: 10px; background: rgba(250,247,242,.9); color: var(--soil); font-size: 10px; font-weight: 500; padding: 3px 8px; border-radius: 20px; z-index: 2; }
+.info { padding: 12px 14px 14px; }
+.name { font-weight: 500; font-size: 14px; margin-bottom: 3px; color: var(--text); }
+.loc { font-size: 11px; color: var(--muted); margin-bottom: 8px; }
+.tags { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 10px; }
+.tag { font-size: 10px; padding: 2px 8px; background: var(--sand2); color: var(--soil); border-radius: 10px; font-weight: 400; }
+.row { display: flex; justify-content: space-between; align-items: center; }
+.price { font-size: 15px; font-weight: 500; color: var(--accent); }
+.price span { font-size: 10px; color: var(--muted); font-weight: 300; }
+.rating { font-size: 11px; color: var(--muted); }
+.rating strong { color: var(--soil); }
