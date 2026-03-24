@@ -55,14 +55,14 @@ export async function getMyBookings(token: string): Promise<Booking[]> {
   return data.data
 }
 
-export async function createBooking(token: string, campgroundId: string, checkinDate: string, checkoutDate: string) {
+export async function createBooking(token: string, campgroundId: string, bookDate: string, duration: number) {
   const res = await fetch(`${BASE_URL}/api/v1/campgrounds/${campgroundId}/bookings`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`
     },
-    body: JSON.stringify({ checkinDate, checkoutDate, bookDate: new Date().toISOString() })
+    body: JSON.stringify({ bookDate, duration })
   })
   const data = await res.json()
   if (!data.success) throw new Error(data.message || 'Booking failed')
@@ -77,4 +77,32 @@ export async function deleteBooking(token: string, bookingId: string) {
   const data = await res.json()
   if (!data.success) throw new Error(data.message || 'Delete failed')
   return data
+}
+
+export async function updateBooking(token: string, bookingId: string, bookDate: string, duration: number) {
+  const res = await fetch(`${BASE_URL}/api/v1/bookings/${bookingId}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
+    },
+    body: JSON.stringify({ bookDate, duration })
+  })
+  const data = await res.json()
+  if (!data.success) throw new Error(data.message || 'Update failed')
+  return data.data
+}
+// ── Review ──────────────────────────────────
+export async function createReview(token: string, campgroundId: string, rating: number, comment: string) {
+  const res = await fetch(`${BASE_URL}/api/v1/campgrounds/${campgroundId}/reviews`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
+    },
+    body: JSON.stringify({ rating, comment })
+  })
+  const data = await res.json()
+  if (!data.success) throw new Error(data.message || 'Review failed')
+  return data.data
 }

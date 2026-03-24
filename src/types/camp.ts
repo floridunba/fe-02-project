@@ -13,8 +13,8 @@ export interface Camp {
 
 export interface Booking {
   _id: string
-  checkinDate: string
-  checkoutDate: string
+  bookDate: string
+  duration: number
   user: string
   campground: {
     _id: string

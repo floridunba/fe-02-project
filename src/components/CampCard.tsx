@@ -2,26 +2,52 @@ import Link from 'next/link'
 import styles from './CampCard.module.css'
 
 interface CampCardProps {
-  name: string; location: string; rating: number
-  reviewCount: number; tags: string[]; emoji: string; gradient: string; href?: string
+  href: string
+  name: string
+  location: string
+  rating: number
+  reviewCount?: number
+  price?: number
+  tags?: string[]
+  imgSrc?: string
 }
 
-export default function CampCard({ name, location, rating, reviewCount, tags, emoji, gradient, href = '/booking' }: CampCardProps) {
+export default function CampCard({
+  href, name, location, rating, reviewCount, price, tags = [], imgSrc}: CampCardProps) {
   return (
     <Link href={href} className={styles.card}>
-      <div className={styles.img} style={{ background: gradient }}>
-        <span className={styles.emoji}>{emoji}</span>
-        <div className={styles.overlay} />
-        <div className={styles.badge}>⭐ {rating}</div>
+      <div className={styles.img}>
+        {imgSrc ? (
+          <img src={imgSrc} alt={name} className={styles.photo} />
+        ) : (
+          <div className={styles.placeholder}>🏕️</div>
+        )}
+        <div className={styles.ratingBadge}>⭐ {rating.toFixed(1)}</div>
       </div>
-      <div className={styles.info}>
+      <div className={styles.body}>
         <div className={styles.name}>{name}</div>
-        <div className={styles.loc}>📍 {location}</div>
-        <div className={styles.tags}>{tags.map(t => <span key={t} className={styles.tag}>{t}</span>)}</div>
-        <div className={styles.row}>
-          <div className={styles.rating}><strong>{rating}</strong> ({reviewCount} reviews)</div>
+        <div className={styles.location}>📍 {location}</div>
+        <div className={styles.tags}>
+          {tags.map((tag) => (
+            <span key={tag} className={styles.tag}>
+              {tag}
+            </span>
+          ))}
+        </div>
+        <div className={styles.footer}>
+          {price != null && (
+            <div className={styles.price}>
+              <span className={styles.priceNum}>{price.toLocaleString()}</span>
+              <span className={styles.priceUnit}> / night</span>
+            </div>
+          )}
+          {reviewCount != null && (
+            <div className={styles.reviews}>
+              {rating.toFixed(1)} ({reviewCount} reviews)
+            </div>
+          )}
         </div>
       </div>
     </Link>
-  )
+  );
 }

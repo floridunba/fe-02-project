@@ -52,7 +52,7 @@ export default function AuthPage() {
 
   return (
     <main className={styles.wrapper}>
-      <Navbar showExplore={false} showTrips={false} showSignIn={false} />
+      {/* <Navbar/> */}
       <div className={styles.authWrap}>
         <div className={styles.logo}>camp<span>.</span>io</div>
         <p className={styles.sub}>Your nature retreat starts here</p>

@@ -13,8 +13,17 @@ export default function HomePage() {
   const router = useRouter()
 
   useEffect(() => {
-    getCamps().then(data => setCamps(data.slice(0, 4)))
+    getCamps().then(data => setCamps(data.slice(0, 6)))
   }, [])
+
+  const campImages = [
+    "/img/camp1.jpg",
+    "/img/camp2.jpg",
+    "/img/camp3.jpg",
+    "/img/camp4.jpg",
+    "/img/camp5.jpg",
+    "/img/camp6.jpg",
+  ];
 
   return (
     <main className={styles.wrapper}>
@@ -24,7 +33,7 @@ export default function HomePage() {
         <p className={styles.heroTag}>Your next escape awaits</p>
         <h1 className={styles.heroTitle}>Find your stay<br />in nature.</h1>
         <p className={styles.heroDesc}>
-          Discover handpicked campgrounds,<br />compare amenities, and book with ease.
+          Discover handpicked campgrounds,<br /> compare amenities, and book with ease.
         </p>
         <div className={styles.heroSearch}>
           <input
@@ -37,27 +46,24 @@ export default function HomePage() {
           <button onClick={() => router.push(`/search?q=${query}`)}>Search</button>
         </div>
       </section>
+
       <section className={styles.grid}>
         <h2 className={styles.sectionTitle}>Popular spots</h2>
         <p className={styles.sectionSub}>Highly rated by campers this season</p>
-        {camps.map((camp, i) => (
-          <CampCard
-            key={camp._id}
-            href={`/booking/${camp._id}`}
-            name={camp.name}
-            location={`${camp.district}, ${camp.province}`}
-            rating={camp.averageRating}
-            reviewCount={camp.totalReviews}
-            tags={[camp.region]}
-            emoji={['🌲','🏕️','⛺','🌄'][i % 4]}
-            gradient={[
-              'linear-gradient(135deg,#4A5E4A,#3A4E3A)',
-              'linear-gradient(135deg,#6B5240,#A08060)',
-              'linear-gradient(135deg,#3A4E6B,#6080A0)',
-              'linear-gradient(135deg,#5A4A6B,#8060A0)',
-            ][i % 4]}
-          />
-        ))}
+        <div className={styles.cardGrid}>
+          {camps.map((camp, i) => (
+            <CampCard
+              key={camp._id}
+              href={`/booking/${camp._id}`}
+              name={camp.name}
+              location={`${camp.district}, ${camp.province}`}
+              rating={camp.averageRating}
+              reviewCount={camp.totalReviews}
+              tags={[camp.region]}
+              imgSrc={campImages[i % campImages.length]}
+            />
+          ))}
+        </div>
       </section>
     </main>
   )

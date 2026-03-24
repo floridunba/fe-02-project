@@ -32,6 +32,14 @@ export default function SearchPage() {
       c.district.toLowerCase().includes(query.toLowerCase())
     )
 
+    const campImages = [
+      '/img/camp1.jpg',
+      '/img/camp2.jpg',
+      '/img/camp3.jpg',
+      '/img/camp4.jpg',
+      '/img/camp5.jpg',
+      '/img/camp6.jpg',
+    ]
   return (
     <main className={styles.wrapper}>
       <Navbar showExplore={false} />
@@ -59,9 +67,9 @@ export default function SearchPage() {
       </div>
       <div className={styles.results}>
         {loading && <p style={{padding:'20px', color:'var(--muted)'}}>กำลังโหลด...</p>}
-        {filtered.map(camp => (
+        {filtered.map((camp,i) => (
           <Link key={camp._id} href={`/booking/${camp._id}`} className={styles.resultCard}>
-            <div className={styles.resultImg} style={{ background: 'linear-gradient(135deg,#4A5E4A,#3A4E3A)' }}>🏕️</div>
+          <div className={styles.resultImg}><img src={campImages[i % campImages.length]} alt={camp.name} className={styles.resultPhoto} /></div>
             <div className={styles.resultInfo}>
               <div className={styles.resultName}>{camp.name}</div>
               <div className={styles.resultLoc}>📍 {camp.district}, {camp.province}</div>

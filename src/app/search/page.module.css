@@ -18,7 +18,19 @@
 .results { padding: 14px 20px; background: var(--sand); }
 .resultCard { display: flex; gap: 12px; background: var(--cream); border-radius: 14px; border: 1px solid var(--tag); margin-bottom: 12px; padding: 14px; cursor: pointer; text-decoration: none; color: inherit; transition: transform .15s, box-shadow .15s; }
 .resultCard:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(0,0,0,.08); }
-.resultImg { width: 70px; height: 70px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 28px; flex-shrink: 0; }
+.resultImg {
+  width: 220px;
+  min-width: 220px;
+  height: 140px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.resultPhoto {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 .resultInfo { flex: 1; }
 .resultName { font-size: 13px; font-weight: 500; margin-bottom: 2px; }
 .resultLoc { font-size: 11px; color: var(--muted); margin-bottom: 6px; }

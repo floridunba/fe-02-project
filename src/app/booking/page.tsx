@@ -12,7 +12,7 @@ export default function BookingPage() {
 
   return (
     <main className={styles.wrapper}>
-      <div className={styles.hero}>
+      {/* <div className={styles.hero}>
         <button className={styles.backBtn} onClick={() => router.push('/search')}>← Back</button>
         <span className={styles.heroEmoji}>🌲</span>
         <div className={styles.heroOverlay} />
@@ -59,7 +59,7 @@ export default function BookingPage() {
           </div>
           <button className={styles.bookBtn} onClick={() => router.push('/my-trips')}>Confirm booking →</button>
         </div>
-      </div>
+      </div> */}
     </main>
   )
 }

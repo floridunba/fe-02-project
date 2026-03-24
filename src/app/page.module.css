@@ -46,3 +46,17 @@
 .grid { padding: 24px 20px; background: var(--sand); }
 .sectionTitle { font-family: 'DM Serif Display', serif; font-size: 18px; color: var(--soil); margin-bottom: 4px; }
 .sectionSub { font-size: 11px; color: var(--muted); margin-bottom: 16px; font-weight: 300; }
+
+.cardGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 16px;
+}
+
+@media (max-width: 900px) {
+  .cardGrid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 580px) {
+  .cardGrid { grid-template-columns: 1fr; }
+}
