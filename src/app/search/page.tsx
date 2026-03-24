@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, Suspense } from 'react'
 import Link from 'next/link'
 import { useSearchParams, useRouter } from 'next/navigation'
 import Navbar from '@/components/Navbar'
@@ -9,7 +9,7 @@ import styles from './page.module.css'
 
 const FILTERS = ['All', 'North', 'South', 'East', 'West', 'Central']
 
-export default function SearchPage() {
+function SearchContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const [camps, setCamps] = useState<Camp[]>([])
@@ -32,14 +32,15 @@ export default function SearchPage() {
       c.district.toLowerCase().includes(query.toLowerCase())
     )
 
-    const campImages = [
-      '/img/camp1.jpg',
-      '/img/camp2.jpg',
-      '/img/camp3.jpg',
-      '/img/camp4.jpg',
-      '/img/camp5.jpg',
-      '/img/camp6.jpg',
-    ]
+  const campImages = [
+    '/img/camp1.jpg',
+    '/img/camp2.jpg',
+    '/img/camp3.jpg',
+    '/img/camp4.jpg',
+    '/img/camp5.jpg',
+    '/img/camp6.jpg',
+  ]
+
   return (
     <main className={styles.wrapper}>
       <Navbar showExplore={false} />
@@ -67,9 +68,9 @@ export default function SearchPage() {
       </div>
       <div className={styles.results}>
         {loading && <p style={{padding:'20px', color:'var(--muted)'}}>กำลังโหลด...</p>}
-        {filtered.map((camp,i) => (
+        {filtered.map((camp, i) => (
           <Link key={camp._id} href={`/booking/${camp._id}`} className={styles.resultCard}>
-          <div className={styles.resultImg}><img src={campImages[i % campImages.length]} alt={camp.name} className={styles.resultPhoto} /></div>
+            <div className={styles.resultImg}><img src={campImages[i % campImages.length]} alt={camp.name} className={styles.resultPhoto} /></div>
             <div className={styles.resultInfo}>
               <div className={styles.resultName}>{camp.name}</div>
               <div className={styles.resultLoc}>📍 {camp.district}, {camp.province}</div>
@@ -85,5 +86,13 @@ export default function SearchPage() {
         ))}
       </div>
     </main>
+  )
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SearchContent />
+    </Suspense>
   )
 }
