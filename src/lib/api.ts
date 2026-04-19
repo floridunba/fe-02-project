@@ -1,6 +1,6 @@
 import { Camp, Booking, User } from '@/types/camp'
 
-const BASE_URL = 'http://localhost:5000'
+const BASE_URL = 'https://se-be-mock.vercel.app'
 
 // ── Campgrounds ──────────────────────────────
 export async function getCamps(): Promise<Camp[]> {
