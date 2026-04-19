@@ -53,6 +53,7 @@ export interface Review {
   user: {
     _id: string;
     name: string;
+    role: string;
   }
   campground: {
     _id: string;

@@ -37,6 +37,7 @@ const CampRatingsReviews = ({campgroundId}: {campgroundId: string}) => {
   const [ratingBreakdown, setRatingBrekdown] = useState([0,0,0,0,0])
   const [avgRating, setAvgRating] = useState(0);
   const userIdRef = useRef<string | null>(null);
+  const isAdmin = useRef(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editText, setEditText] = useState("");
   const [editRating, setEditRating] = useState(0);
@@ -47,6 +48,7 @@ const CampRatingsReviews = ({campgroundId}: {campgroundId: string}) => {
         getMe(token).then((user) => {
           setUsername(user.name);
           userIdRef.current = user._id;
+          isAdmin.current = user.role === "admin";
       });
       }
     }
@@ -275,18 +277,43 @@ const CampRatingsReviews = ({campgroundId}: {campgroundId: string}) => {
 
             {/* Comment area */}
             {editingId === review._id ? (
-              <textarea
-                className="review-textarea"
-                rows={3}
-                value={editText}
-                onChange={(e) => setEditText(e.target.value)}
-              />
+              <>
+                <textarea
+                  className="review-textarea"
+                  rows={3}
+                  value={editText}
+                  onChange={(e) => setEditText(e.target.value)}
+                />
+                { (review.user.role === "admin") &&
+                  <span
+                    className="official-badge"
+                    style={{
+                      background: avatarStyles.blue.bg,
+                      color: avatarStyles.blue.color,
+                    }}
+                  >
+                    Official
+                  </span>
+                }
+              </>
             ) : (
-              <p className="review-text">{review.comment}</p>
+              <>
+              <span className="review-text">{review.comment}</span>
+                { (review.user.role === "admin") &&
+                  <span
+                    className="official-badge"
+                    style={{
+                      background: avatarStyles.blue.bg,
+                      color: avatarStyles.blue.color,
+                    }}
+                  >
+                    Official
+                  </span>
+                }</>
             )}
 
             {/* Action buttons (only user's review) */}
-            {review.user._id === userIdRef.current && (
+            {(review.user._id === userIdRef.current || isAdmin.current) && (
               <div className="review-actions">
                 {editingId === review._id ? (
                   <>
@@ -604,6 +631,13 @@ const CampRatingsReviews = ({campgroundId}: {campgroundId: string}) => {
         .action-btn svg {
           width: 100%;
           height: 100%;
+        }
+        .official-badge {
+          font-size: 11px;
+          padding: 3px 9px;
+          border-radius: 99px;
+          font-weight: 500;
+          white-space: nowrap;
         }
         .edit-btn { margin: 0px; color: #5a5a4a; }
         .edit-btn:hover { background: #f5f3ee; border-color: #bbb5aa; }
