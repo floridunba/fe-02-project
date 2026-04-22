@@ -23,6 +23,16 @@ export interface Camp {
   totalReviews: number
 }
 
+export interface CreditCard {
+  _id: string
+  cardholderName: string
+  last4: string
+  brand: 'visa' | 'mastercard' | 'amex' | 'discover' | 'other'
+  expiryMonth: number
+  expiryYear: number
+  isDefault: boolean
+}
+
 export interface Booking {
   _id: string
   bookDate: string
@@ -35,6 +45,9 @@ export interface Booking {
     tel: string
   }
   createdAt: string
+  paymentStatus: 'pending' | 'paid' | 'cancelled' | 'expired'
+  paymentExpiresAt: string
+  paymentCard?: CreditCard | string
 }
 
 export interface User {
