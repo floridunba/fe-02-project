@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { CreditCard, Booking } from '@/types/camp'
 import CardForm, { CardFormData } from './CardForm'
-import CardListItem from './CardListItem'
+import CardSelector from './CardSelector'
 import styles from './PaymentStep.module.css'
 
 interface PaymentStepProps {
@@ -84,15 +84,11 @@ export default function PaymentStep({
         <>
           <div className={styles.section}>
             <p className={styles.sectionTitle}>Select Card</p>
-            {cards.map(card => (
-              <div key={card._id} style={{ marginBottom: '0.5rem' }}>
-                <CardListItem
-                  card={card}
-                  selected={selectedCardId === card._id}
-                  onSelect={c => setSelectedCardId(c._id)}
-                />
-              </div>
-            ))}
+            <CardSelector
+              cards={cards}
+              selectedId={selectedCardId}
+              onSelect={c => setSelectedCardId(c._id)}
+            />
           </div>
 
           <button className={styles.addNewBtn} onClick={() => setShowAddForm(true)}>
