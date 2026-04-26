@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { CreditCard, Booking } from '@/types/camp'
 import CardForm, { CardFormData } from './CardForm'
 import CardSelector from './CardSelector'
+import CountdownTimer from './CountdownTimer'
 import styles from './PaymentStep.module.css'
 
 interface PaymentStepProps {
@@ -70,6 +71,15 @@ export default function PaymentStep({
       <p className={styles.subheading}>
         Booking ID: {booking._id.slice(-8).toUpperCase()}
       </p>
+
+      {booking.paymentExpiresAt && (
+        <div style={{ marginBottom: '1rem' }}>
+          <CountdownTimer
+            expiresAt={booking.paymentExpiresAt}
+            onExpired={() => setError('Payment window has expired. Please create a new booking.')}
+          />
+        </div>
+      )}
 
       {showAddForm ? (
         <div className={styles.section}>
