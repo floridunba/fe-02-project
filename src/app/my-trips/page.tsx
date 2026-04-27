@@ -3,12 +3,15 @@ import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Navbar from '@/components/Navbar'
 import StatusBadge from '@/components/StatusBadge'
-import { getMyBookings, deleteBooking, createReview, getMyCards, addCard, updateCard, deleteCard } from '@/lib/api'
+import { getMyBookings, deleteBooking, createReview, getMyCards, addCard, updateCard, deleteCard, payBooking, resumePayment } from '@/lib/api'
 import { getToken } from '@/lib/auth'
 import { Booking, CreditCard } from '@/types/camp'
 import styles from './page.module.css'
 import CardManager from '@/components/CardManager'
 import { CardFormData } from '@/components/CardForm'
+import PaymentStep from '@/components/PaymentStep'
+import CountdownTimer from '@/components/CountdownTimer'
+import PaymentStatusBadge from '@/components/PaymentStatusBadge'
 
 interface ReviewModal {
   campgroundId: string
@@ -22,6 +25,7 @@ export default function MyTripsPage() {
   const [cards, setCards] = useState<CreditCard[]>([])
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState<'trips' | 'cards'>('trips')
+  const [resumingBooking, setResumingBooking] = useState<Booking | null>(null)
   const [reviewModal, setReviewModal] = useState<ReviewModal | null>(null)
   const [rating, setRating] = useState(0)
   const [hoverRating, setHoverRating] = useState(0)
@@ -66,6 +70,18 @@ export default function MyTripsPage() {
     if (!token) return
     await deleteCard(token, cardId)
     setCards(prev => prev.filter(c => c._id !== cardId))
+  }
+
+  const handleResume = async (booking: Booking) => {
+    const token = getToken()
+    if (!token) return
+    try {
+      await resumePayment(token, booking._id)
+      setResumingBooking(booking)
+    } catch {
+      // If resume fails (expired etc.), refresh bookings
+      getMyBookings(token).then(setBookings)
+    }
   }
 
   const getCheckout = (bookDate: string, duration: number) => {
@@ -135,6 +151,28 @@ export default function MyTripsPage() {
           />
         )}
         {activeTab === 'trips' && (<>
+        {/* Resume payment overlay */}
+        {resumingBooking && (
+          <div style={{ marginBottom: '1.5rem', border: '1.5px solid #fde68a', borderRadius: '10px', padding: '1rem', background: '#fffbeb' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+              <span style={{ fontWeight: 700, color: '#92400e' }}>Resume Payment</span>
+              <button onClick={() => setResumingBooking(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#6b7280', fontSize: '1.1rem' }}>✕</button>
+            </div>
+            {resumingBooking.paymentExpiresAt && (
+              <div style={{ marginBottom: '0.75rem' }}>
+                <CountdownTimer expiresAt={resumingBooking.paymentExpiresAt} onExpired={() => { setResumingBooking(null); getMyBookings(getToken()!).then(setBookings) }} />
+              </div>
+            )}
+            <PaymentStep
+              booking={resumingBooking}
+              savedCards={cards}
+              token={getToken() ?? ''}
+              onPaid={(b) => { setBookings(prev => prev.map(bk => bk._id === b._id ? b : bk)); setResumingBooking(null) }}
+              onAddCard={async (data) => { const c = await addCard(getToken()!, data); setCards(prev => [...prev, c]); return c }}
+              onPayWithCard={async (id, cardId) => payBooking(getToken()!, id, cardId)}
+            />
+          </div>
+        )}
         {loading && <p style={{ padding: '20px', color: 'var(--muted)' }}>กำลังโหลด...</p>}
         {!loading && bookings.length === 0 && (
           <div className={styles.empty}>
@@ -151,7 +189,10 @@ export default function MyTripsPage() {
               <div className={styles.cardTop}>
                 <div className={styles.cardImg} style={{ background: 'linear-gradient(135deg,#4A5E4A,#3A4E3A)' }}>🏕️</div>
                 <div className={styles.cardMeta}>
-                  <div className={styles.cardName}>{b.campground?.name}</div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+                    <span className={styles.cardName}>{b.campground?.name}</span>
+                    {b.paymentStatus && <PaymentStatusBadge status={b.paymentStatus} />}
+                  </div>
                   <div className={styles.cardDates}>
                     {new Date(b.bookDate).toLocaleDateString('th-TH')} – {getCheckout(b.bookDate, b.duration).toLocaleDateString('th-TH')}
                     <span style={{ color: 'var(--muted)', fontSize: '12px', marginLeft: '6px' }}>[{b.duration} night(s)]</span>
@@ -177,6 +218,9 @@ export default function MyTripsPage() {
                     >
                       Edit ✎
                     </span>
+                  )}
+                  {b.paymentStatus === 'pending' && b.paymentExpiresAt && new Date(b.paymentExpiresAt) > new Date() && (
+                    <span className={styles.cardAction} style={{ color: '#d97706' }} onClick={() => handleResume(b)}>Resume Payment ↗</span>
                   )}
                   <span className={styles.cardAction} onClick={() => handleDelete(b._id)}>Cancel ×</span>
                 </div>
