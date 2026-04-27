@@ -1,4 +1,4 @@
-import { Camp, Booking, User } from '@/types/camp'
+import { Camp, Booking, User, CreditCard } from '@/types/camp'
 
 const BASE_URL = 'https://se-be-mock.vercel.app'
 
@@ -183,4 +183,109 @@ export async function deleteReview(token: string, reviewId: string) {
   const data = await res.json()
   if (!data.success) throw new Error(data.message || 'Delete review failed')
   return data
+}
+
+// ── Credit Cards ──────────────────────────────
+export async function getMyCards(token: string): Promise<CreditCard[]> {
+  const res = await fetch(`${BASE_URL}/api/v1/cards`, {
+    headers: { Authorization: `Bearer ${token}` }
+  })
+  const data = await res.json()
+  if (!data.success) throw new Error(data.message || 'Failed to fetch cards')
+  return data.data
+}
+
+export async function addCard(token: string, card: {
+  cardholderName: string
+  cardNumber: string
+  expiryMonth: number
+  expiryYear: number
+  isDefault?: boolean
+}): Promise<CreditCard> {
+  const res = await fetch(`${BASE_URL}/api/v1/cards`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify(card)
+  })
+  const data = await res.json()
+  if (!data.success) throw new Error(data.message || 'Failed to add card')
+  return data.data
+}
+
+export async function updateCard(token: string, cardId: string, card: {
+  cardholderName?: string
+  cardNumber?: string
+  expiryMonth?: number
+  expiryYear?: number
+  isDefault?: boolean
+}): Promise<CreditCard> {
+  const res = await fetch(`${BASE_URL}/api/v1/cards/${cardId}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify(card)
+  })
+  const data = await res.json()
+  if (!data.success) throw new Error(data.message || 'Failed to update card')
+  return data.data
+}
+
+export async function deleteCard(token: string, cardId: string) {
+  const res = await fetch(`${BASE_URL}/api/v1/cards/${cardId}`, {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${token}` }
+  })
+  const data = await res.json()
+  if (!data.success) throw new Error(data.message || 'Failed to delete card')
+  return data
+}
+
+export async function setDefaultCard(token: string, cardId: string): Promise<CreditCard> {
+  const res = await fetch(`${BASE_URL}/api/v1/cards/${cardId}/default`, {
+    method: 'PUT',
+    headers: { Authorization: `Bearer ${token}` }
+  })
+  const data = await res.json()
+  if (!data.success) throw new Error(data.message || 'Failed to set default card')
+  return data.data
+}
+
+// ── Payments ──────────────────────────────────
+export async function payBooking(token: string, bookingId: string, cardId: string): Promise<Booking> {
+  const res = await fetch(`${BASE_URL}/api/v1/bookings/${bookingId}/pay`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ cardId })
+  })
+  const data = await res.json()
+  if (!data.success) throw new Error(data.message || 'Payment failed')
+  return data.data
+}
+
+export async function getOngoingBooking(token: string): Promise<Booking | null> {
+  const res = await fetch(`${BASE_URL}/api/v1/bookings/pending`, {
+    headers: { Authorization: `Bearer ${token}` }
+  })
+  const data = await res.json()
+  if (!data.success) return null
+  return data.data
+}
+
+export async function resumePayment(token: string, bookingId: string) {
+  const res = await fetch(`${BASE_URL}/api/v1/bookings/${bookingId}/resume`, {
+    method: 'PUT',
+    headers: { Authorization: `Bearer ${token}` }
+  })
+  const data = await res.json()
+  if (!data.success) throw new Error(data.message || 'Cannot resume payment')
+  return data
+}
+
+export async function cancelPayment(token: string, bookingId: string): Promise<Booking> {
+  const res = await fetch(`${BASE_URL}/api/v1/bookings/${bookingId}/cancel-payment`, {
+    method: 'PUT',
+    headers: { Authorization: `Bearer ${token}` }
+  })
+  const data = await res.json()
+  if (!data.success) throw new Error(data.message || 'Cannot cancel payment')
+  return data.data
 }
