@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { CreditCard, Booking } from '@/types/camp'
 import CardForm, { CardFormData } from './CardForm'
+import CardListItem from './CardListItem'
 import styles from './PaymentStep.module.css'
 
 interface PaymentStepProps {
@@ -84,29 +85,13 @@ export default function PaymentStep({
           <div className={styles.section}>
             <p className={styles.sectionTitle}>Select Card</p>
             {cards.map(card => (
-              <label
-                key={card._id}
-                style={{
-                  display: 'flex', alignItems: 'center', gap: '0.75rem',
-                  padding: '0.6rem 0.75rem', marginBottom: '0.5rem',
-                  border: `1.5px solid ${selectedCardId === card._id ? '#2563eb' : '#e5e7eb'}`,
-                  borderRadius: '8px', cursor: 'pointer',
-                  background: selectedCardId === card._id ? '#eff6ff' : '#fff'
-                }}
-              >
-                <input
-                  type="radio"
-                  name="card"
-                  value={card._id}
-                  checked={selectedCardId === card._id}
-                  onChange={() => setSelectedCardId(card._id)}
+              <div key={card._id} style={{ marginBottom: '0.5rem' }}>
+                <CardListItem
+                  card={card}
+                  selected={selectedCardId === card._id}
+                  onSelect={c => setSelectedCardId(c._id)}
                 />
-                <span style={{ fontSize: '0.9rem', color: '#374151' }}>
-                  {card.brand.toUpperCase()} •••• {card.last4}
-                  &nbsp;|&nbsp;{String(card.expiryMonth).padStart(2,'0')}/{card.expiryYear}
-                  &nbsp;{card.isDefault && <span style={{ fontSize: '0.75rem', color: '#6b7280' }}>(default)</span>}
-                </span>
-              </label>
+              </div>
             ))}
           </div>
 
