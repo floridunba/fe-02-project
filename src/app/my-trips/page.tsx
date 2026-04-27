@@ -3,10 +3,12 @@ import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Navbar from '@/components/Navbar'
 import StatusBadge from '@/components/StatusBadge'
-import { getMyBookings, deleteBooking, createReview } from '@/lib/api'
+import { getMyBookings, deleteBooking, createReview, getMyCards, addCard, updateCard, deleteCard } from '@/lib/api'
 import { getToken } from '@/lib/auth'
-import { Booking } from '@/types/camp'
+import { Booking, CreditCard } from '@/types/camp'
 import styles from './page.module.css'
+import CardManager from '@/components/CardManager'
+import { CardFormData } from '@/components/CardForm'
 
 interface ReviewModal {
   campgroundId: string
@@ -17,7 +19,9 @@ interface ReviewModal {
 
 export default function MyTripsPage() {
   const [bookings, setBookings] = useState<Booking[]>([])
+  const [cards, setCards] = useState<CreditCard[]>([])
   const [loading, setLoading] = useState(true)
+  const [activeTab, setActiveTab] = useState<'trips' | 'cards'>('trips')
   const [reviewModal, setReviewModal] = useState<ReviewModal | null>(null)
   const [rating, setRating] = useState(0)
   const [hoverRating, setHoverRating] = useState(0)
@@ -30,9 +34,10 @@ export default function MyTripsPage() {
   useEffect(() => {
     const token = getToken()
     if (!token) { router.push('/auth'); return }
-    getMyBookings(token)
-      .then(setBookings)
-      .finally(() => setLoading(false))
+    Promise.all([
+      getMyBookings(token).then(setBookings),
+      getMyCards(token).then(setCards).catch(() => {})
+    ]).finally(() => setLoading(false))
   }, [router])
 
   const handleDelete = async (id: string) => {
@@ -40,6 +45,27 @@ export default function MyTripsPage() {
     if (!token) return
     await deleteBooking(token, id)
     setBookings(prev => prev.filter(b => b._id !== id))
+  }
+
+  const handleAddCard = async (data: CardFormData) => {
+    const token = getToken()
+    if (!token) return
+    const card = await addCard(token, data)
+    setCards(prev => [...prev, card])
+  }
+
+  const handleEditCard = async (cardId: string, data: CardFormData) => {
+    const token = getToken()
+    if (!token) return
+    const updated = await updateCard(token, cardId, data)
+    setCards(prev => prev.map(c => c._id === cardId ? updated : c))
+  }
+
+  const handleDeleteCard = async (cardId: string) => {
+    const token = getToken()
+    if (!token) return
+    await deleteCard(token, cardId)
+    setCards(prev => prev.filter(c => c._id !== cardId))
   }
 
   const getCheckout = (bookDate: string, duration: number) => {
@@ -85,7 +111,30 @@ export default function MyTripsPage() {
         <p className={styles.sub}>All your campground bookings</p>
       </div>
 
+      {/* Tab bar */}
+      <div style={{ display: 'flex', gap: '0.5rem', padding: '0 1rem 0', maxWidth: '700px', margin: '0 auto' }}>
+        {(['trips', 'cards'] as const).map(tab => (
+          <button key={tab} onClick={() => setActiveTab(tab)} style={{
+            padding: '0.45rem 1.1rem', borderRadius: '99px', border: 'none', cursor: 'pointer',
+            fontWeight: 600, fontSize: '0.88rem',
+            background: activeTab === tab ? '#2563eb' : '#f3f4f6',
+            color: activeTab === tab ? '#fff' : '#374151'
+          }}>
+            {tab === 'trips' ? 'My Trips' : 'My Cards'}
+          </button>
+        ))}
+      </div>
+
       <div className={styles.body}>
+        {activeTab === 'cards' && (
+          <CardManager
+            cards={cards}
+            onAdd={handleAddCard}
+            onEdit={handleEditCard}
+            onDelete={handleDeleteCard}
+          />
+        )}
+        {activeTab === 'trips' && (<>
         {loading && <p style={{ padding: '20px', color: 'var(--muted)' }}>กำลังโหลด...</p>}
         {!loading && bookings.length === 0 && (
           <div className={styles.empty}>
@@ -135,6 +184,7 @@ export default function MyTripsPage() {
             </div>
           )
         })}
+        </>)}
       </div>
 
       {/* Review Modal */}
