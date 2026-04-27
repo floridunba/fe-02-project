@@ -11,7 +11,12 @@ import { Camp, Room } from "@/types/camp";
 
 // ─── Page Component ───────────────────────────────────────────────────────────
 
-const CampgroundDetailPage = () => {
+interface CampgroundDetailPageProps {
+  onBook?: (bookDate: string, duration: number) => void;
+  bookingLoading?: boolean;
+}
+
+const CampgroundDetailPage = ({ onBook, bookingLoading = false }: CampgroundDetailPageProps) => {
   const { id } = useParams<{ id: string }>()
   const [camp, setCamp] = useState<Camp | null>(null)
   const [roomType, setRoomType] = useState<Room[]>([])
@@ -82,12 +87,10 @@ const CampgroundDetailPage = () => {
             {/* Reservation card */}
             <CampReservation
               selectedRoom={selectedRoom}
-              checkIn="Apr 20"
-              checkOut="Apr 22"
-              guests={2}
-              nights={2}
               isAdmin={isAdmin}
               onEditCamp={() => alert("Open edit camp form")}
+              onBook={onBook}
+              bookingLoading={bookingLoading}
             />
 
             <div className="section-divider" />

@@ -53,9 +53,9 @@ const CampRatingsReviews = ({campgroundId}: {campgroundId: string}) => {
       }
     }
     getReviews({ campgroundId: campgroundId }).then((r) => {
-      // console.log("Review")
-      // console.log(r);
       setReviews(r);
+    }).catch((err) => {
+      console.error('Failed to load reviews:', err.message);
     });
   }, [campgroundId]);
 
@@ -89,18 +89,17 @@ const CampRatingsReviews = ({campgroundId}: {campgroundId: string}) => {
 
   const handleSubmitReview = async () => {
     if (!userRating || !reviewText.trim()) return;
-
     const token = getToken();
     if (!token) return;
-
-    await createReview(token, campgroundId, userRating, reviewText)
-    // refresh
-    const r = await getReviews({ campgroundId });
-    setReviews(r ?? []);
-
-    // reset form
-    setUserRating(0);
-    setReviewText("");
+    try {
+      await createReview(token, campgroundId, userRating, reviewText);
+      const r = await getReviews({ campgroundId });
+      setReviews(r ?? []);
+      setUserRating(0);
+      setReviewText("");
+    } catch (err) {
+      console.error('Failed to submit review:', err);
+    }
   };  
 
   const handleDelete = async (reviewId: string) => {

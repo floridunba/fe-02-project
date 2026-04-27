@@ -1,6 +1,6 @@
 'use client'
 import React, { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Navbar from '@/components/Navbar'
 import { login, register } from '@/lib/api'
 import { saveToken } from '@/lib/auth'
@@ -11,6 +11,8 @@ export default function AuthPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const returnTo = searchParams.get('returnTo') ?? '/'
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -22,7 +24,7 @@ export default function AuthPage() {
     try {
       const data = await login(email, password)
       saveToken(data.token)
-      router.push('/')
+      router.push(returnTo)
     } catch {
       setError('Email หรือ Password ไม่ถูกต้อง')
     } finally {
@@ -42,7 +44,7 @@ export default function AuthPage() {
     try {
       const data = await register(name, email, tel, password)
       saveToken(data.token)
-      router.push('/')
+      router.push(returnTo)
     } catch {
       setError('สมัครสมาชิกไม่สำเร็จ')
     } finally {

@@ -1,33 +1,37 @@
-import React from "react";
-import type { RoomType } from "./CampRoomTypes";
+import React, { useState } from "react";
 import { Room } from "@/types/camp";
 
 interface CampReservationProps {
   selectedRoom: Room | null;
-  checkIn: string;
-  checkOut: string;
-  guests: number;
-  nights: number;
+  checkIn?: string;
+  checkOut?: string;
+  guests?: number;
+  nights?: number;
   isAdmin?: boolean;
   onEditCamp?: () => void;
+  onBook?: (bookDate: string, duration: number) => void;
+  bookingLoading?: boolean;
 }
 
 const SERVICE_FEE_RATE = 0.1;
 
+const today = new Date().toISOString().split("T")[0];
+
 const CampReservation: React.FC<CampReservationProps> = ({
   selectedRoom,
-  checkIn,
-  checkOut,
-  guests,
-  nights,
   isAdmin = false,
   onEditCamp,
+  onBook,
+  bookingLoading = false,
 }) => {
+  const [bookDate, setBookDate] = useState(today);
+  const [duration, setDuration] = useState(1);
+
+  const nights = duration;
   const subtotal = selectedRoom ? selectedRoom.price * nights : 0;
   const fee = Math.round(subtotal * SERVICE_FEE_RATE);
   const total = subtotal + fee;
-  const canBook =
-    selectedRoom !== null && selectedRoom.available != 0;
+  const canBook = selectedRoom !== null && !!bookDate;
 
   return (
     <div className="reservation-card">
@@ -51,21 +55,26 @@ const CampReservation: React.FC<CampReservationProps> = ({
 
       <div className="date-grid">
         <div className="date-cell">
-          <div className="date-lbl">Check-in</div>
-          <div className="date-val">{checkIn}</div>
+          <div className="date-lbl">Check-in date</div>
+          <input
+            className="date-input"
+            type="date"
+            value={bookDate}
+            min={today}
+            onChange={e => setBookDate(e.target.value)}
+          />
         </div>
         <div className="date-cell">
-          <div className="date-lbl">Check-out</div>
-          <div className="date-val">{checkOut}</div>
+          <div className="date-lbl">Nights</div>
+          <input
+            className="date-input"
+            type="number"
+            value={duration}
+            min={1}
+            max={3}
+            onChange={e => setDuration(Math.max(1, Math.min(3, Number(e.target.value))))}
+          />
         </div>
-      </div>
-
-      <div className="guest-row">
-        <div>
-          <div className="date-lbl">Guests</div>
-          <div className="date-val">{guests} {guests === 1 ? "guest" : "guests"}</div>
-        </div>
-        <ChevronIcon />
       </div>
 
       {selectedRoom && (
@@ -91,10 +100,11 @@ const CampReservation: React.FC<CampReservationProps> = ({
 
       <button
         className="book-btn"
-        disabled={!canBook}
-        style={canBook ? {} : { opacity: 0.45, cursor: "not-allowed" }}
+        disabled={!canBook || bookingLoading}
+        onClick={() => canBook && onBook?.(bookDate, duration)}
+        style={canBook && !bookingLoading ? {} : { opacity: 0.45, cursor: "not-allowed" }}
       >
-        Reserve now
+        {bookingLoading ? "Reserving…" : "Reserve now"}
       </button>
 
       {false && (
@@ -171,24 +181,17 @@ const CampReservation: React.FC<CampReservationProps> = ({
           color: #1e2a1c;
           margin-top: 2px;
         }
-        .guest-row {
-          border: 1px solid #e2ddd5;
-          border-radius: 9px;
-          padding: 9px 11px;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
+        .date-input {
+          width: 100%;
+          font-size: 13px;
+          color: #1e2a1c;
+          background: transparent;
+          border: none;
+          outline: none;
+          padding: 0;
+          margin-top: 2px;
+          font-family: inherit;
           cursor: pointer;
-          margin-bottom: 0;
-          transition: border-color 0.15s;
-        }
-        .guest-row:hover {
-          border-color: #bbb5aa;
-        }
-        .guest-row svg {
-          width: 14px;
-          height: 14px;
-          color: #8a8a7a;
         }
         .divider {
           border: none;
