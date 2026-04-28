@@ -7,11 +7,13 @@ import { getMyBookings, cancelPayment } from '@/lib/api'
 import { getToken } from '@/lib/auth'
 import { Booking } from '@/types/camp'
 import PaymentStatusBadge from '@/components/PaymentStatusBadge'
+import ConfirmationDialog from '@/components/ConfirmationDialog'
 
 export default function AdminPage() {
   const [bookings, setBookings] = useState<Booking[]>([])
   const [loading, setLoading] = useState(true)
   const [cancellingId, setCancellingId] = useState<string | null>(null)
+  const [confirmBookingId, setConfirmBookingId] = useState<string | null>(null)
   const [error, setError] = useState('')
   const router = useRouter()
 
@@ -95,7 +97,7 @@ export default function AdminPage() {
               <div>
                 {(b.paymentStatus === 'pending' || b.paymentStatus === 'expired') && (
                   <button
-                    onClick={() => handleCancelPayment(b._id)}
+                    onClick={() => setConfirmBookingId(b._id)}
                     disabled={cancellingId === b._id}
                     style={{
                       padding: '0.45rem 1rem',
@@ -123,6 +125,21 @@ export default function AdminPage() {
           ))}
         </div>
       </div>
+
+      <ConfirmationDialog
+        open={!!confirmBookingId}
+        title="Cancel Payment"
+        message="Are you sure you want to cancel this payment? This action cannot be undone."
+        confirmLabel="Yes, Cancel"
+        danger
+        onConfirm={async () => {
+          if (confirmBookingId) {
+            await handleCancelPayment(confirmBookingId)
+            setConfirmBookingId(null)
+          }
+        }}
+        onCancel={() => setConfirmBookingId(null)}
+      />
     </main>
   )
 }
